@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using NZwalks.API.Repositories;
 using AutoMapper;
+using NZwalks.API.CustomActionFilters;
 
 namespace NZwalks.API.Controllers
 {
@@ -89,30 +90,34 @@ namespace NZwalks.API.Controllers
         //POST TO CREATE NEW REGION
         //POST:https://localhost:portnumber/api/regions  
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddREgionRequestDTo addREgionRequestDTo)
         {
-            //map RegionDTO to domain model
-            /* var RegionDomainModel = new Region
-             {
-                 Code = addREgionRequestDTo.Code,
-                 Name = addREgionRequestDTo.Name,
-                 RegionImageURl = addREgionRequestDTo.RegionImageURl
-             };*/
-            var RegionDomainModel = _mapper.Map<Region>(addREgionRequestDTo);
-            //use domain model to create Region(adding to database)
-            await _regionRepository.CreateAsync(RegionDomainModel);
+           //map RegionDTO to domain model
+                /* var RegionDomainModel = new Region
+                 {
+                     Code = addREgionRequestDTo.Code,
+                     Name = addREgionRequestDTo.Name,
+                     RegionImageURl = addREgionRequestDTo.RegionImageURl
+                 };*/
+                var RegionDomainModel = _mapper.Map<Region>(addREgionRequestDTo);
+                //use domain model to create Region(adding to database)
+                await _regionRepository.CreateAsync(RegionDomainModel);
 
 
-            //map domain model back to DTO
-            /* var RegionDTO = new RegionDto
-             {
-                 Id = RegionDomainModel.Id,
-                 Name = RegionDomainModel.Name,
-                 Code = RegionDomainModel.Code,
-                 RegionImageURl = RegionDomainModel.RegionImageURl
-             };*/
-            var RegionDTO = _mapper.Map<RegionDto>(RegionDomainModel);
-            return CreatedAtAction(nameof(GetById), new {id =  RegionDTO.Id},RegionDTO);
+                //map domain model back to DTO
+                /* var RegionDTO = new RegionDto
+                 {
+                     Id = RegionDomainModel.Id,
+                     Name = RegionDomainModel.Name,
+                     Code = RegionDomainModel.Code,
+                     RegionImageURl = RegionDomainModel.RegionImageURl
+                 };*/
+                var RegionDTO = _mapper.Map<RegionDto>(RegionDomainModel);
+                return CreatedAtAction(nameof(GetById), new { id = RegionDTO.Id }, RegionDTO);
+            
+           
+            
 
         }
 
@@ -122,44 +127,49 @@ namespace NZwalks.API.Controllers
         //PUT : https://localhost:portnumber/api/regions/{id}
         [HttpPut]
         [Route("{id:Guid}")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDTO updateRegionRequestDTO)
         {
-            //map DTO to domain model
-            /*var RegionDomainModel = new Region
-            {
-                Code = updateRegionRequestDTO.Code,
-                Name = updateRegionRequestDTO.Name,
-                RegionImageURl = updateRegionRequestDTO.RegionImageURl
-            };*/
-            var RegionDomainModel = _mapper.Map<Region>(updateRegionRequestDTO);
+           
+                //map DTO to domain model
+                /*var RegionDomainModel = new Region
+                {
+                    Code = updateRegionRequestDTO.Code,
+                    Name = updateRegionRequestDTO.Name,
+                    RegionImageURl = updateRegionRequestDTO.RegionImageURl
+                };*/
+                var RegionDomainModel = _mapper.Map<Region>(updateRegionRequestDTO);
 
-            //check if Region exists
-            RegionDomainModel = await _regionRepository.UpdateAsync(id, RegionDomainModel);
-            if (RegionDomainModel == null)
-            {
-                return NotFound();
-            }
+                //check if Region exists
+                RegionDomainModel = await _regionRepository.UpdateAsync(id, RegionDomainModel);
+                if (RegionDomainModel == null)
+                {
+                    return NotFound();
+                }
 
-            //THIS PART DONE IN REPOSITORY
+                //THIS PART DONE IN REPOSITORY
 
-            //map DTO to Domain Model
-            //RegionDomainModel.Code = updateRegionRequestDTO.Code;
-            //RegionDomainModel.Name = updateRegionRequestDTO.Name;
-            //RegionDomainModel.RegionImageURl = updateRegionRequestDTO.RegionImageURl;
+                //map DTO to Domain Model
+                //RegionDomainModel.Code = updateRegionRequestDTO.Code;
+                //RegionDomainModel.Name = updateRegionRequestDTO.Name;
+                //RegionDomainModel.RegionImageURl = updateRegionRequestDTO.RegionImageURl;
 
 
-            //map domain model back to DTO to client
+                //map domain model back to DTO to client
 
-            /* var Regiondto = new RegionDto
-             {
-                 Id = RegionDomainModel.Id,
-                 Name = RegionDomainModel.Name,
-                 Code = RegionDomainModel.Code,
-                 RegionImageURl = RegionDomainModel.RegionImageURl
-             }; */
-            var Regiondto = _mapper.Map<RegionDto>(RegionDomainModel);
+                /* var Regiondto = new RegionDto
+                 {
+                     Id = RegionDomainModel.Id,
+                     Name = RegionDomainModel.Name,
+                     Code = RegionDomainModel.Code,
+                     RegionImageURl = RegionDomainModel.RegionImageURl
+                 }; */
+                var Regiondto = _mapper.Map<RegionDto>(RegionDomainModel);
 
-            return Ok(Regiondto);
+                return Ok(Regiondto);
+            
+            
+        
         }
 
 
