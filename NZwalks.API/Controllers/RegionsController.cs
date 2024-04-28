@@ -11,12 +11,14 @@ using System.Threading;
 using NZwalks.API.Repositories;
 using AutoMapper;
 using NZwalks.API.CustomActionFilters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NZwalks.API.Controllers
 {
     //https://localhost:portnumber/api/regions   
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegionsController : ControllerBase
     {
         private readonly NZwalksDbContext _dbContext;
